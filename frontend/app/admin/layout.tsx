@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, type ReactNode } from "react";
+import { useEffect, useState, useRef, useCallback, type ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { getToken, initSession, logout as sessionLogout } from "@/lib/session";
@@ -110,6 +110,8 @@ function AdminLayoutInner({ children }: { children: ReactNode }) {
   const [navItems, setNavItems] = useNavOrder();
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const dragOverIndex = useRef<number | null>(null);
+  const touchStartY = useRef<number>(0);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // Handle drag start
   const handleDragStart = (index: number) => {
@@ -122,9 +124,13 @@ function AdminLayoutInner({ children }: { children: ReactNode }) {
   };
 
   // Handle drop — reorder items
-  const handleDrop = () => {
+  const handleDrop = useCallback(() => {
     if (dragIndex === null || dragOverIndex.current === null) return;
-    if (dragIndex === dragOverIndex.current) return;
+    if (dragIndex === dragOverIndex.current) {
+      setDragIndex(null);
+      dragOverIndex.current = null;
+      return;
+    }
 
     const newItems = [...navItems];
     const [moved] = newItems.splice(dragIndex, 1);
@@ -132,6 +138,33 @@ function AdminLayoutInner({ children }: { children: ReactNode }) {
     setNavItems(newItems);
     setDragIndex(null);
     dragOverIndex.current = null;
+  }, [dragIndex, navItems, setNavItems]);
+
+  // Touch event handlers for mobile
+  const handleTouchStart = (index: number, e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+    setDragIndex(index);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault();
+    const currentY = e.touches[0].clientY;
+    const el = e.currentTarget as HTMLElement;
+    const parent = el.closest('nav');
+    if (!parent) return;
+    const items = parent.querySelectorAll('[data-nav-item]');
+    let overIndex: number | null = null;
+    items.forEach((item, i) => {
+      const rect = item.getBoundingClientRect();
+      if (currentY >= rect.top && currentY <= rect.bottom) {
+        overIndex = i;
+      }
+    });
+    dragOverIndex.current = overIndex;
+  };
+
+  const handleTouchEnd = () => {
+    handleDrop();
   };
 
   // Redirect to login if not on login page and no token
@@ -211,15 +244,19 @@ function AdminLayoutInner({ children }: { children: ReactNode }) {
             return (
               <div
                 key={item.href}
+                data-nav-item
                 draggable
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={(e) => { e.preventDefault(); handleDragOver(index); }}
                 onDragEnd={handleDrop}
+                onTouchStart={(e) => handleTouchStart(index, e)}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
                 className={`flex items-center gap-1 rounded-xl transition-all duration-200 group ${
                   isDragging ? "opacity-50" : ""
                 } ${isDragOver && dragIndex !== null ? "pt-6" : ""}`}
               >
-                <span className="flex items-center justify-center size-5 shrink-0 cursor-grab active:cursor-grabbing text-muted/30 hover:text-muted/60 transition-colors">
+                <span className="flex items-center justify-center size-5 shrink-0 cursor-grab active:cursor-grabbing text-muted/30 hover:text-muted/60 transition-colors touch-none">
                   <GripVertical className="size-3.5" />
                 </span>
                 <Link
