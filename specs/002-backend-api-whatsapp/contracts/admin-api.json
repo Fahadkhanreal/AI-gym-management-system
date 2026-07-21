@@ -1,0 +1,221 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TitanForge Admin API",
+    "version": "1.0.0",
+    "description": "Protected CRUD endpoints for admin content management. Requires authentication."
+  },
+  "paths": {
+    "/api/admin/login": {
+      "post": {
+        "summary": "Admin login",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "format": "password" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful, session cookie set" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/api/admin/logout": {
+      "post": {
+        "summary": "Admin logout",
+        "tags": ["Auth"],
+        "responses": {
+          "200": { "description": "Logged out, session cleared" }
+        }
+      }
+    },
+    "/api/admin/settings": {
+      "put": {
+        "summary": "Update gym settings",
+        "tags": ["Admin"],
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gym_name": { "type": "string" },
+                  "tagline": { "type": "string" },
+                  "address": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "whatsapp_number": { "type": "string" },
+                  "opening_time": { "type": "string" },
+                  "closing_time": { "type": "string" },
+                  "map_link": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Settings updated" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/api/admin/pricing": {
+      "get": {
+        "summary": "List all pricing plans (including inactive)",
+        "tags": ["Admin", "Pricing"],
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": { "description": "All pricing plans" }
+        }
+      },
+      "post": {
+        "summary": "Create new pricing plan",
+        "tags": ["Admin", "Pricing"],
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "price_monthly", "price_quarterly", "price_yearly"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "price_monthly": { "type": "number" },
+                  "price_quarterly": { "type": "number" },
+                  "price_yearly": { "type": "number" },
+                  "features": { "type": "array", "items": { "type": "object" } },
+                  "is_popular": { "type": "boolean" },
+                  "cta_text": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Pricing plan created" },
+          "400": { "description": "Validation error" }
+        }
+      }
+    },
+    "/api/admin/pricing/[id]": {
+      "put": {
+        "summary": "Update a pricing plan",
+        "tags": ["Admin", "Pricing"],
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": { "description": "Pricing plan updated" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a pricing plan",
+        "tags": ["Admin", "Pricing"],
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": { "description": "Pricing plan deleted" },
+          "400": { "description": "Cannot delete: plan is referenced" }
+        }
+      }
+    },
+    "/api/admin/programs": {
+      "get": { "summary": "List all programs", "tags": ["Admin", "Programs"], "security": [{ "cookieAuth": [] }] },
+      "post": { "summary": "Create program", "tags": ["Admin", "Programs"], "security": [{ "cookieAuth": [] }] }
+    },
+    "/api/admin/programs/[id]": {
+      "put": { "summary": "Update program", "tags": ["Admin", "Programs"], "security": [{ "cookieAuth": [] }] },
+      "delete": { "summary": "Delete program", "tags": ["Admin", "Programs"], "security": [{ "cookieAuth": [] }] }
+    },
+    "/api/admin/faqs": {
+      "get": { "summary": "List all FAQs", "tags": ["Admin", "FAQs"], "security": [{ "cookieAuth": [] }] },
+      "post": { "summary": "Create FAQ", "tags": ["Admin", "FAQs"], "security": [{ "cookieAuth": [] }] }
+    },
+    "/api/admin/faqs/[id]": {
+      "put": { "summary": "Update FAQ", "tags": ["Admin", "FAQs"], "security": [{ "cookieAuth": [] }] },
+      "delete": { "summary": "Delete FAQ", "tags": ["Admin", "FAQs"], "security": [{ "cookieAuth": [] }] }
+    },
+    "/api/admin/testimonials": {
+      "get": { "summary": "List all testimonials", "tags": ["Admin", "Testimonials"], "security": [{ "cookieAuth": [] }] },
+      "post": { "summary": "Create testimonial", "tags": ["Admin", "Testimonials"], "security": [{ "cookieAuth": [] }] }
+    },
+    "/api/admin/testimonials/[id]": {
+      "put": { "summary": "Update testimonial", "tags": ["Admin", "Testimonials"], "security": [{ "cookieAuth": [] }] },
+      "delete": { "summary": "Delete testimonial", "tags": ["Admin", "Testimonials"], "security": [{ "cookieAuth": [] }] }
+    },
+    "/api/admin/gallery": {
+      "get": { "summary": "List all gallery images", "tags": ["Admin", "Gallery"], "security": [{ "cookieAuth": [] }] },
+      "post": {
+        "summary": "Upload gallery image",
+        "tags": ["Admin", "Gallery"],
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": { "type": "string", "format": "binary" },
+                  "category": { "type": "string" },
+                  "caption": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/gallery/[id]": {
+      "delete": {
+        "summary": "Delete gallery image (also removes from Storage)",
+        "tags": ["Admin", "Gallery"],
+        "security": [{ "cookieAuth": [] }]
+      }
+    },
+    "/api/admin/whatsapp": {
+      "get": {
+        "summary": "List all WhatsApp messages (optionally filter by status)",
+        "tags": ["Admin", "WhatsApp"],
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["received", "replied", "archived"] } },
+          { "name": "is_read", "in": "query", "schema": { "type": "boolean" } }
+        ]
+      }
+    },
+    "/api/admin/whatsapp/reply": {
+      "post": {
+        "summary": "Send manual reply to a WhatsApp message",
+        "tags": ["Admin", "WhatsApp"],
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["message_id", "reply_text"],
+                "properties": {
+                  "message_id": { "type": "string", "format": "uuid" },
+                  "reply_text": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TitanForge Public API",
+    "version": "1.0.0",
+    "description": "Public read-only endpoints for landing page content"
+  },
+  "paths": {
+    "/api/settings": {
+      "get": {
+        "summary": "Get gym settings",
+        "tags": ["Public"],
+        "responses": {
+          "200": {
+            "description": "Gym configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "gym_name": { "type": "string" },
+                    "tagline": { "type": "string" },
+                    "address": { "type": "string" },
+                    "phone": { "type": "string" },
+                    "whatsapp_number": { "type": "string" },
+                    "opening_time": { "type": "string" },
+                    "closing_time": { "type": "string" },
+                    "map_link": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pricing": {
+      "get": {
+        "summary": "Get all active pricing plans",
+        "tags": ["Public"],
+        "responses": {
+          "200": {
+            "description": "Array of pricing plans ordered by sort_order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "format": "uuid" },
+                      "name": { "type": "string" },
+                      "description": { "type": "string" },
+                      "price_monthly": { "type": "number" },
+                      "price_quarterly": { "type": "number" },
+                      "price_yearly": { "type": "number" },
+                      "features": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "text": { "type": "string" },
+                            "included": { "type": "boolean" }
+                          }
+                        }
+                      },
+                      "is_popular": { "type": "boolean" },
+                      "cta_text": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/programs": {
+      "get": {
+        "summary": "Get all active training programs",
+        "tags": ["Public"],
+        "responses": {
+          "200": {
+            "description": "Array of training programs ordered by sort_order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "format": "uuid" },
+                      "title": { "type": "string" },
+                      "description": { "type": "string" },
+                      "duration": { "type": "string" },
+                      "price": { "type": "number" },
+                      "category": { "type": "string" },
+                      "image_url": { "type": "string" },
+                      "icon_name": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/faqs": {
+      "get": {
+        "summary": "Get all active FAQs",
+        "tags": ["Public"],
+        "responses": {
+          "200": {
+            "description": "Array of FAQs ordered by sort_order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "format": "uuid" },
+                      "question": { "type": "string" },
+                      "answer": { "type": "string" },
+                      "category": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/testimonials": {
+      "get": {
+        "summary": "Get all active testimonials",
+        "tags": ["Public"],
+        "responses": {
+          "200": {
+            "description": "Array of testimonials ordered by sort_order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "format": "uuid" },
+                      "name": { "type": "string" },
+                      "message": { "type": "string" },
+                      "image_url": { "type": "string" },
+                      "rating": { "type": "integer", "minimum": 1, "maximum": 5 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gallery": {
+      "get": {
+        "summary": "Get all active gallery images",
+        "tags": ["Public"],
+        "responses": {
+          "200": {
+            "description": "Array of gallery images ordered by sort_order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "format": "uuid" },
+                      "image_url": { "type": "string" },
+                      "category": { "type": "string" },
+                      "caption": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

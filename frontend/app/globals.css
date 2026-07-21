@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+/* ─── Custom theme tokens ──────────────────────── */
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-space-grotesk);
+
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+  --color-cyan: #00f5ff;
+  --color-pink: #ff00aa;
+  --color-gold: #ffd700;
+  --color-surface: #121212;
+  --color-surface-light: #1e1e1e;
+  --color-muted: #a0a0a0;
+}
+
+/* ─── Base ─────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+/* @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } } */
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* ─── Glassmorphism utility ──────────────────── */
+/* backdrop-filter removed — causes severe scroll jank on Windows.
+     Uses solid bg with subtle gradient for same visual without GPU cost. */
+.glass {
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Neon glow keyframes ────────────────────── */
+@keyframes neon-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--color-cyan), 0 0 20px color-mix(in srgb, var(--color-cyan) 50%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--color-cyan), 0 0 40px color-mix(in srgb, var(--color-cyan) 40%, transparent);
+  }
+}
+
+@keyframes neon-glow-cyan {
+  0%,
+  100% {
+    text-shadow: 0 0 4px var(--color-cyan), 0 0 12px color-mix(in srgb, var(--color-cyan) 60%, transparent);
+  }
+  50% {
+    text-shadow: 0 0 8px var(--color-cyan), 0 0 24px color-mix(in srgb, var(--color-cyan) 50%, transparent);
+  }
+}
+
+@keyframes neon-glow-pink {
+  0%,
+  100% {
+    text-shadow: 0 0 4px var(--color-pink), 0 0 12px color-mix(in srgb, var(--color-pink) 60%, transparent);
+  }
+  50% {
+    text-shadow: 0 0 8px var(--color-pink), 0 0 24px color-mix(in srgb, var(--color-pink) 50%, transparent);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes scroll-indicator {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(6px);
+  }
+}
+
+/* ─── Utility classes ─────────────────────────── */
+.neon-glow-cyan {
+  animation: neon-glow-cyan 3s ease-in-out infinite;
+}
+
+.neon-glow-pink {
+  animation: neon-glow-pink 3s ease-in-out infinite;
+}
+
+.float-anim {
+  animation: float 4s ease-in-out infinite;
+}
+
+.scroll-indicator {
+  animation: scroll-indicator 2s ease-in-out infinite;
+}
+
+/* ─── Infinite marquee keyframes ──────────────── */
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ─── Ripple animation ────────────────────────── */
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(30);
+    opacity: 0;
+  }
+}
+
+/* ─── Button idle pulse (3s delay) ────────────── */
+@keyframes idle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-cyan) 40%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-cyan) 60%, transparent);
+  }
+}
+
+.btn-idle-pulse {
+  animation: idle-pulse 3s ease-in-out infinite;
+  animation-delay: 3s; /* 3 sec idle ke baad start */
+}
+
+/* ─── Tap splash effect (mobile + desktop) ────── */
+@keyframes tap-splash {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.tap-splash {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tap-splash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(0, 245, 255, 0.3), transparent 60%);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tap-splash:active::after {
+  animation: tap-splash 0.5s ease-out forwards;
+}
+
+/* ─── Animated border gradient ────────────────── */
+@keyframes border-rotate {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.border-glow {
+  position: relative;
+  border: none;
+  background: transparent;
+  z-index: 0;
+}
+.border-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from 0deg, var(--color-cyan), var(--color-pink), var(--color-cyan), var(--color-pink), var(--color-cyan));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-rotate 12s linear infinite;
+  pointer-events: none;
+}
+
+/* ─── Fade-in-up animation (CSS-only, no JS) ─── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
+}
+.animate-fade-in-up-delay-1 { animation-delay: 0.05s; }
+.animate-fade-in-up-delay-2 { animation-delay: 0.1s; }
+.animate-fade-in-up-delay-3 { animation-delay: 0.15s; }
+.animate-fade-in-up-delay-4 { animation-delay: 0.2s; }
+.animate-fade-in-up-delay-5 { animation-delay: 0.25s; }
+
+/* ─── Card press feedback ─────────────────────── */
+.card-press:active {
+  transform: scale(0.97);
+}
+
+/* ─── Reduced motion ──────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .neon-glow-cyan,
+  .neon-glow-pink,
+  .float-anim,
+  .scroll-indicator {
+    animation: none !important;
+  }
+}
+
+/* ─── Scroll progress bar ─────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-cyan), var(--color-pink));
+  z-index: 9999;
+  transform-origin: left center;
+  will-change: transform;
+}
+
+/* ─── Admin UI shared classes ─────────────────── */
+.input-field {
+  @apply rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-foreground placeholder:text-muted/50;
+  @apply focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/30;
+  @apply transition-colors;
+}
+
+.icon-btn {
+  @apply flex items-center justify-center size-8 rounded-lg text-muted hover:text-cyan hover:bg-cyan/10;
+  @apply transition-colors;
+}
+
+/* ─── Selection ───────────────────────────────── */
+::selection {
+  background: color-mix(in srgb, var(--color-cyan) 30%, transparent);
+  color: var(--color-foreground);
+}

@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TitanForge WhatsApp Webhook",
+    "version": "1.0.0",
+    "description": "Green API webhook endpoint for receiving WhatsApp messages"
+  },
+  "paths": {
+    "/api/whatsapp/webhook": {
+      "post": {
+        "summary": "Receive WhatsApp message from Green API",
+        "tags": ["WhatsApp"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string", "example": "incomingMessageReceived" },
+                  "timestamp": { "type": "integer" },
+                  "idMessage": { "type": "string" },
+                  "body": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "example": "textMessage" },
+                      "messageData": {
+                        "type": "object",
+                        "properties": {
+                          "textMessageData": {
+                            "type": "object",
+                            "properties": {
+                              "textMessage": { "type": "string", "description": "Message text content" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "senderData": {
+                    "type": "object",
+                    "properties": {
+                      "sender": { "type": "string", "description": "Sender's phone number", "example": "923001234567" },
+                      "senderName": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received and processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "auto_replied": { "type": "boolean", "description": "Whether an auto-reply was sent" },
+                    "message_id": { "type": "string", "format": "uuid" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
