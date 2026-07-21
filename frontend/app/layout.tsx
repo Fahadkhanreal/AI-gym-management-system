@@ -23,11 +23,16 @@ const inter = Inter({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://titanforge.pk";
 
 async function getGymSettings() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-  const { data } = await supabase.from("gym_settings").select("*").maybeSingle();
-  return data;
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+    if (!supabaseUrl || !supabaseAnonKey) return null;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const { data } = await supabase.from("gym_settings").select("*").maybeSingle();
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata(): Promise<Metadata> {
