@@ -1,13 +1,29 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+/**
+ * Lazy auth client — created on first use so build-time does not crash.
+ */
+
+function createLazyAuthClient(): SupabaseClient {
+  let client: SupabaseClient | null = null;
+  return new Proxy({} as SupabaseClient, {
+    get(_, prop) {
+      if (!client) {
+        client = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+          process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+        );
+      }
+      return (client as any)[prop];
+    },
+  });
+}
 
 /**
- * Admin Supabase client for auth operations.
+ * Admin Supabase client for auth operations (lazy).
  */
-export const supabaseAuth = createClient(supabaseUrl, supabaseServiceRoleKey);
+export const supabaseAuth = createLazyAuthClient();
 
 /**
  * Verify the bearer token from the Authorization header.
