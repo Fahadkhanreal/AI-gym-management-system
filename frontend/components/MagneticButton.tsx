@@ -56,7 +56,7 @@ export default function MagneticButton({
     primary:
       "bg-cyan text-black font-semibold hover:shadow-[0_0_20px_#00f5ff66] active:scale-[0.97] btn-idle-pulse",
     secondary:
-      "border border-white/20 text-foreground hover:border-cyan/50 hover:text-cyan active:scale-[0.97]",
+      "border border-white/20 text-foreground hover:border-[#ff00aa]/60 hover:text-cyan hover:shadow-[0_0_25px_rgba(0,245,255,0.2),0_0_50px_rgba(255,0,170,0.1)] active:scale-[0.97] btn-idle-pulse",
     ghost:
       "text-muted hover:text-foreground hover:bg-white/5",
   };

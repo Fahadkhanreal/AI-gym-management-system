@@ -34,14 +34,18 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState("");
 
+  const loadSettings = () => {
+    fetch("/api/settings")
+      .then(r => r.json())
+      .then(data => { if (data && data.id) setForm(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  };
+
   useEffect(() => {
     const token = getToken();
     if (!token) { router.push("/admin/login"); return; }
 
-    fetch("/api/settings")
-      .then(r => r.json())
-      .then(data => { if (data?.gym_name) setForm(data); setLoading(false); })
-      .catch(() => setLoading(false));
+    loadSettings();
   }, [router]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -58,6 +62,7 @@ export default function SettingsPage() {
 
     if (res.ok) {
       setSuccess("Settings updated successfully!");
+      loadSettings(); // Refresh form from server
       setTimeout(() => setSuccess(""), 3000);
     }
     setSaving(false);
@@ -151,7 +156,7 @@ function Field({ label, value, onChange }: { label: string; value: string; onCha
       <label className="block text-xs font-medium text-muted mb-1.5">{label}</label>
       <input
         type={label.includes("Time") ? "time" : "text"}
-        value={value}
+        value={value ?? ""}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholders[label] || ""}
         className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-foreground placeholder:text-muted/30 focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/30 transition-colors"

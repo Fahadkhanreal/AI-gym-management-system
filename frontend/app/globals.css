@@ -110,6 +110,15 @@ body {
   animation: scroll-indicator 2s ease-in-out infinite;
 }
 
+/* ─── Scroll indicator line (minimal thin cyan bar) ── */
+@keyframes scroll-indicator-line {
+  0%, 100% { opacity: 0.3; transform: scaleX(0.6); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+.scroll-indicator-line {
+  animation: scroll-indicator-line 2s ease-in-out infinite;
+}
+
 /* ─── Infinite marquee keyframes ──────────────── */
 @keyframes marquee-left {
   0% {

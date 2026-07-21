@@ -17,6 +17,9 @@ export interface GymSettings {
   whatsapp_number: string;
   opening_time: string;
   closing_time: string;
+  hero_stat_members: string;
+  hero_stat_years: string;
+  hero_stat_award: string;
 }
 
 const defaults: GymSettings = {
@@ -27,6 +30,9 @@ const defaults: GymSettings = {
   whatsapp_number: "",
   opening_time: "",
   closing_time: "",
+  hero_stat_members: "",
+  hero_stat_years: "",
+  hero_stat_award: "",
 };
 
 interface GymContextType {
@@ -55,7 +61,7 @@ export function GymProvider({ children }: { children: ReactNode }) {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data) => {
-        if (data?.gym_name) {
+        if (data && data.id) {
           setSettings({
             gym_name: data.gym_name || defaults.gym_name,
             tagline: data.tagline || defaults.tagline,
@@ -64,6 +70,9 @@ export function GymProvider({ children }: { children: ReactNode }) {
             whatsapp_number: data.whatsapp_number || "",
             opening_time: data.opening_time || "",
             closing_time: data.closing_time || "",
+            hero_stat_members: data.hero_stat_members || defaults.hero_stat_members,
+            hero_stat_years: data.hero_stat_years || defaults.hero_stat_years,
+            hero_stat_award: data.hero_stat_award || defaults.hero_stat_award,
           });
         }
         setLoading(false);
