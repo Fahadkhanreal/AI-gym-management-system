@@ -36,7 +36,7 @@
 - **Dashboard** — Overview of members, leads, and key metrics
 - **Gym Settings** — Update gym name, tagline, address, WhatsApp number, timing, etc. (reflects site-wide instantly)
 - **Content Management**
-  - Pricing Plans (CRUD with featured/recommended)
+  - Pricin Plans (CRUD with featured/recommended)
   - Programs (CRUD with images)
   - Benefits (CRUD with stats)
   - Facilities (CRUD with images)
