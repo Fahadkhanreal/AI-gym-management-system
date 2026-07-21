@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const instanceId = process.env.GREEN_API_INSTANCE_ID!;
-const apiToken = process.env.GREEN_API_TOKEN!;
-const apiUrl = process.env.GREEN_API_URL!;
+const instanceId = process.env.GREEN_API_INSTANCE_ID || "";
+const apiToken = process.env.GREEN_API_TOKEN || "";
+const apiUrl = process.env.GREEN_API_URL || "";
 
 interface SendMessageResponse {
   success: boolean;
